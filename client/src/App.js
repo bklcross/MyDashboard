@@ -8,7 +8,7 @@ const App = () => {
   return (
     <React.StrictMode>
       <Timer />
-      {/* <GoogleNews /> */}
+      <GoogleNews />
       <Weather />
     </React.StrictMode>
   );
