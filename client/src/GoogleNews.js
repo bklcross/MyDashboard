@@ -4,7 +4,7 @@ export default function GoogleNews() {
 	const [news, setNews] = useState([]);
 
 	useEffect(() => {
-		const key = "358c4d8b64c74e118f4b22422ad987e5";
+		const key = "194df6fe3029433199fb23076cbe2d5c";
 		const url = `https://newsapi.org/v2/top-headlines?sources=google-news&apiKey=${key}`;
 		fetch(url, {
 			method: "GET",
