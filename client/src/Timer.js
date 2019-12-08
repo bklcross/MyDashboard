@@ -1,23 +1,21 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {useState, useEffect} from 'react';
 
 export default function Timer() {
-	const [time, setTime] = useState(new Date().toLocaleTimeString());
-	const timePassed = useRef(0);
+    const [time, setTime] = useState(new Date().toLocaleTimeString());
 
-	useEffect(() => {
-		const timeout = setTimeout(() => {
-			const date = new Date()
-			timePassed.current = timePassed.current + 1;
-			setTime(date.toLocaleTimeString());
-		}, 1000);
-		return () => {
-			clearTimeout(timeout);
-		}
-	}, [time]);
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            let date = new Date();
+            setTime(date.toLocaleTimeString());
+        }, 1000);
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [time]);
 
-	return (
-		<div>
-			<div>{time}</div>
-		</div>
-	)
+    return (
+        <div>
+            <div>{time}</div>
+        </div>
+    );
 }
