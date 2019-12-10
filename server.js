@@ -9,6 +9,7 @@ mongoose.connect("mongodb://localhost/dashboard", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
+mongoose.set("debug", true);
 
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
@@ -36,14 +37,62 @@ app.post("/user", async (req, res) => {
 const TaskDB = require("./schema/Task.js");
 
 app.post("/task", async (req, res) => {
+  const userId = mongoose.mongo.ObjectID(req.body.user);
   const newTaskData = {
-    user: req.user._id,
-    body: req.body
+    user: userId,
+    body: req.body.body
   };
 
   try {
-    const newTaskDoc = await TaskDB.create(newTaskData);
-    res.json(newTaskDoc);
+    const userDoc = await UserDB.findOne({ _id: req.body.user });
+    if (userDoc) {
+      const newTaskDoc = await TaskDB.create(newTaskData);
+      const newTaskId = newTaskDoc._id;
+
+      userDoc.tasks = [...userDoc.tasks, newTaskId];
+      await userDoc.save();
+
+      const populatedUserDoc = await userDoc.populate("tasks").execPopulate();
+      res.status(200).json(populatedUserDoc);
+    } else {
+      throw new Error("User not found");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.put("/task/:taskId", async (req, res) => {
+  const taskId = req.params.taskId;
+  const { body, done } = req.body;
+
+  try {
+    const taskDoc = await TaskDB.findOne({ _id: taskId });
+    if (taskDoc) {
+      taskDoc.body = typeof body !== "undefined" ? body : taskDoc.body;
+      taskDoc.done = typeof done !== "undefined" ? done : taskDoc.done;
+      await taskDoc.save();
+
+      res.status(200).json(taskDoc);
+    } else {
+      throw new Error("Task not found");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.delete("/task/:taskId", async (req, res) => {
+  const taskId = req.params.taskId;
+
+  try {
+    const deleteResult = await TaskDB.deleteOne({ _id: taskId });
+    if (deleteResult.n === 0) {
+      throw new Error("Can't find document");
+    }
+    res.status(200).json({ success: true });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, error: err.message });

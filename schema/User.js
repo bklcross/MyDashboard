@@ -14,10 +14,12 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  task: {
-    type: Schema.Types.ObjectId,
-    ref: "Task"
-  }
+  tasks: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Task"
+    }
+  ]
 });
 
 module.exports = mongoose.model("User", UserSchema);
