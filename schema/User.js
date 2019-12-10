@@ -13,6 +13,10 @@ UserSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    task: {
+        type: Schema.Types.ObjectId,
+        ref: "Task"
     }
 })
 
