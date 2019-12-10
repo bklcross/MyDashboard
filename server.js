@@ -32,7 +32,6 @@ app.post("/user", async (req, res) => {
   }
 });
 
-//TODO: write route for create task and getting user infomation, with population
 //TODO: write validator for checking login (if req.user exist), for creating user, for creating task
 const TaskDB = require("./schema/Task.js");
 
