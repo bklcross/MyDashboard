@@ -3,6 +3,7 @@ import { render } from "react-dom";
 import Timer from "./Timer";
 import GoogleNews from "./GoogleNews";
 import Weather from "./Weather";
+import Quote from "./Quote";
 
 const App = () => {
   return (
@@ -10,6 +11,7 @@ const App = () => {
       <Timer />
       <GoogleNews />
       <Weather />
+      <Quote />
     </React.StrictMode>
   );
 };
